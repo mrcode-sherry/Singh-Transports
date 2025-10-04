@@ -1,13 +1,14 @@
-import Navbar from "@/component/Navbar";
+import About from "@/component/About";
+
 
 export default function Home() {
   return (
     <>
-    <div>
-      <section>
-        <Navbar/>
-      </section>
-    </div>    
+      <div>
+        <section>
+          <About/>
+        </section>
+      </div>
     </>
   );
 }
