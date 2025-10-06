@@ -36,7 +36,7 @@ const Reservation = () => {
   Passengers: ${form.passengers}`;
 
   return (
-    <div className="min-h-screen pt-28"> {/* pt-28 to offset fixed navbar */}
+    <div className="min-h-screen pt-28 bg-white"> {/* pt-28 to offset fixed navbar */}
       <motion.section
         className="max-w-3xl mx-auto px-6 py-20"
         initial={{ opacity: 0, y: 20 }}

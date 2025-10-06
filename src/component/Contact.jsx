@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const Contact = () => {
   return (
-    <section className="bg-white py-16 mt-28 px-6 md:px-24">
+    <section className="bg-white py-20 mt-16 px-6 md:px-24">
       <div className="mx-auto grid lg:grid-cols-2 gap-10">
         {/* Left: Form */}
         <div>
@@ -29,7 +29,7 @@ const Contact = () => {
             </motion.div>
           </div>
 
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
             {[
               { type: "text", placeholder: "First Name*" },
               { type: "text", placeholder: "Last Name*" },
