@@ -3,17 +3,16 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const Relatedcompanies = () => {
-  // Dummy payment method images (replace with real ones later)
-  const paymentImages = [
-    "https://via.placeholder.com/150x80?text=Visa",
-    "https://via.placeholder.com/150x80?text=MasterCard",
-    "https://via.placeholder.com/150x80?text=PayPal",
-    "https://via.placeholder.com/150x80?text=Stripe",
-    "https://via.placeholder.com/150x80?text=GooglePay",
-    "https://via.placeholder.com/150x80?text=ApplePay",
-    "https://via.placeholder.com/150x80?text=AmericanExpress",
-    "https://via.placeholder.com/150x80?text=UnionPay",
-    "https://via.placeholder.com/150x80?text=AliPay",
+  // Actual company images from the public/companies folder
+  const companyImages = [
+    "/companies/company1.png",
+    "/companies/company2.png",
+    "/companies/company3.png",
+    "/companies/company4.png",
+    "/companies/company5.png",
+    "/companies/company6.png",
+    "/companies/company9.png",
+    "/companies/company8.png",
   ];
 
   return (
@@ -44,26 +43,28 @@ const Relatedcompanies = () => {
       <div className="relative w-full overflow-hidden">
         <motion.div
           className="flex gap-8"
-          initial={{ x: 0 }}
+          initial={{ x: "0%" }}
           animate={{ x: ["0%", "-100%"] }}
           transition={{
             repeat: Infinity,
             repeatType: "loop",
-            duration: 15,
+            duration: 20,
             ease: "linear",
           }}
         >
           {/* Duplicate images for smooth infinite scroll */}
-          {[...paymentImages, ...paymentImages].map((src, i) => (
+          {[...companyImages, ...companyImages].map((src, i) => (
             <div
               key={i}
               className="flex-shrink-0 w-1/4 md:w-1/5 flex justify-center"
             >
-              <img
-                src={src}
-                alt={`Payment ${i}`}
-                className="h-20 w-auto object-contain bg-white rounded-lg shadow-md p-4"
-              />
+              <div className="h-20 w-40 flex items-center justify-center bg-white rounded-lg shadow-md p-4">
+                <img
+                  src={src}
+                  alt={`Company ${i + 1}`}
+                  className="max-h-16 max-w-full object-contain"
+                />
+              </div>
             </div>
           ))}
         </motion.div>
