@@ -17,7 +17,7 @@ const Footer = () => {
             </span>
           </div>
           <p className="text-gray-300 text-sm leading-relaxed">
-            SinghTransports provides reliable and comfortable shuttle services
+            SinghTransports provides reliable to and comfortable shuttle services
             from airport to hostel and vice versa. Your journey, our priority!
           </p>
         </div>
