@@ -20,6 +20,31 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+This project uses environment variables for configuration. Create a `.env` file in the root directory based on `.env.example`:
+
+```
+# Admin Credentials
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=singh123
+
+# Site Configuration
+NEXT_PUBLIC_SITE_NAME=SinghTransports
+NEXT_PUBLIC_SITE_DESCRIPTION=Reliable shuttle and transport booking website.
+
+# Contact Information
+NEXT_PUBLIC_CONTACT_EMAIL=info@singhtransports.com
+NEXT_PUBLIC_CONTACT_PHONE=+33 123 456 789
+```
+
+## Admin Access
+
+To access the admin dashboard:
+1. Navigate to `/login`
+2. Use the admin credentials (default: username `admin`, password `singh123`)
+3. After login, a "Dashboard" link will appear in the navigation menu
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

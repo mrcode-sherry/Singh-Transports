@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { User, Mail, Phone, Calendar, MapPin, Users } from "lucide-react";
+import { User, Mail, Phone, Calendar, MapPin, Users, Loader2, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Reservation = () => {
@@ -12,6 +12,9 @@ const Reservation = () => {
     route: "",
     passengers: 1,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const routes = [
     "Airport → Hostel A",
@@ -27,13 +30,46 @@ const Reservation = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const mailtoLink = `mailto:dummymail@example.com?subject=New Reservation&body=
-  Name: ${form.name}%0D%0A
-  Email: ${form.email}%0D%0A
-  Phone: ${form.phone}%0D%0A
-  Date: ${form.date}%0D%0A
-  Route: ${form.route}%0D%0A
-  Passengers: ${form.passengers}`;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage("");
+    setIsSuccess(false);
+
+    try {
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitMessage("Reservation submitted successfully! We'll contact you shortly.");
+        setIsSuccess(true);
+        // Reset form
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          date: "",
+          route: "",
+          passengers: 1,
+        });
+      } else {
+        setSubmitMessage(`Error: ${data.error || 'Failed to submit reservation'}`);
+        setIsSuccess(false);
+      }
+    } catch (error) {
+      setSubmitMessage(`Error: ${error.message}`);
+      setIsSuccess(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen pt-28 bg-white"> {/* pt-28 to offset fixed navbar */}
@@ -53,6 +89,7 @@ const Reservation = () => {
 
         <motion.form
           className="bg-gray-100 p-8 rounded-lg shadow-lg space-y-6"
+          onSubmit={handleSubmit}
         >
           {/* Name */}
           <div className="flex items-center border-b border-gray-300 py-2">
@@ -64,6 +101,7 @@ const Reservation = () => {
               value={form.name}
               onChange={handleChange}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -77,6 +115,7 @@ const Reservation = () => {
               value={form.email}
               onChange={handleChange}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -90,6 +129,7 @@ const Reservation = () => {
               value={form.phone}
               onChange={handleChange}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -102,6 +142,7 @@ const Reservation = () => {
               value={form.date}
               onChange={handleChange}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -113,6 +154,7 @@ const Reservation = () => {
               value={form.route}
               onChange={handleChange}
               className="w-full focus:outline-none text-gray-700"
+              required
             >
               <option value="">Select Route</option>
               {routes.map((r, i) => (
@@ -133,17 +175,50 @@ const Reservation = () => {
               onChange={handleChange}
               min={1}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+              required
             />
           </div>
 
+          {/* Submit Message */}
+          {submitMessage && (
+            <motion.div 
+              className={`p-4 rounded-lg flex items-center ${isSuccess ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isSuccess ? (
+                <>
+                  <CheckCircle className="mr-2" size={20} />
+                  <span className="font-medium">{submitMessage}</span>
+                </>
+              ) : (
+                <span>{submitMessage}</span>
+              )}
+            </motion.div>
+          )}
+
           {/* Submit */}
-          <motion.a
-            href={mailtoLink}
-            className="block text-center bg-yellow-500 text-blue-900 font-semibold py-3 rounded-lg shadow hover:bg-yellow-400 transition-colors duration-300"
-            whileHover={{ scale: 1.05 }}
+          <motion.button
+            type="submit"
+            className={`w-full text-center font-semibold py-3 rounded-lg shadow transition-colors duration-300 flex items-center justify-center ${
+              isSubmitting 
+                ? 'bg-blue-900 text-white cursor-not-allowed' 
+                : 'bg-yellow-500 text-blue-900 hover:bg-yellow-400'
+            }`}
+            whileHover={!isSubmitting ? { scale: 1.05 } : {}}
+            whileTap={!isSubmitting ? { scale: 0.95 } : {}}
+            disabled={isSubmitting}
           >
-            Submit Reservation
-          </motion.a>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 animate-spin" size={20} />
+                Processing...
+              </>
+            ) : (
+              "Submit Reservation"
+            )}
+          </motion.button>
         </motion.form>
       </motion.section>
     </div>

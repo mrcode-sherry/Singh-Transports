@@ -1,10 +1,17 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react"; // icons
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if admin is logged in
+    const loggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+    setIsAdminLoggedIn(loggedIn);
+  }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -13,6 +20,11 @@ const Navbar = () => {
     { name: "Reservation", href: "/reservation" },
     { name: "Contact", href: "/contact" },
   ];
+
+  // Add dashboard link if admin is logged in
+  if (isAdminLoggedIn) {
+    navLinks.push({ name: "Dashboard", href: "/dashboard" });
+  }
 
   return (
     <nav className="bg-blue-900 text-white fixed top-0 left-0 w-full z-50 shadow-lg">
