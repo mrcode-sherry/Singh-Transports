@@ -60,45 +60,46 @@ const Contact = () => {
 
   return (
     <section className="bg-white py-20 mt-16 px-6 md:px-24">
-      <div className="mx-auto grid lg:grid-cols-2 gap-10">
-        {/* Left: Form */}
-        <div>
-          <div className="flex items-center justify-center mb-10">
-            <motion.div
-              className="flex items-center w-full justify-center"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div
-                className="flex-1 h-1 bg-yellow-400 rounded-full mr-3"
-                style={{ maxWidth: "50px" }}
-              ></div>
-              <h1 className="text-3xl text-center md:text-4xl font-bold text-blue-900 uppercase tracking-wider mx-auto">
-                Contact Us
-              </h1>
-              <div
-                className="flex-1 h-1 bg-yellow-400 rounded-full ml-3"
-                style={{ maxWidth: "50px" }}
-              ></div>
-            </motion.div>
-          </div>
+      <div className="mx-auto">
+        {/* Form Header */}
+        <div className="flex items-center justify-center mb-10">
+          <motion.div
+            className="flex items-center w-full justify-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div
+              className="flex-1 h-1 bg-yellow-400 rounded-full mr-3"
+              style={{ maxWidth: "50px" }}
+            ></div>
+            <h1 className="text-3xl text-center md:text-4xl font-bold text-blue-900 uppercase tracking-wider mx-auto">
+              Contact Us
+            </h1>
+            <div
+              className="flex-1 h-1 bg-yellow-400 rounded-full ml-3"
+              style={{ maxWidth: "50px" }}
+            ></div>
+          </motion.div>
+        </div>
 
-          {message && (
-            <motion.div
-              className={`mb-6 p-4 rounded-lg ${
-                message.type === 'success' 
-                  ? 'bg-green-100 text-green-700 border border-green-200' 
-                  : 'bg-red-100 text-red-700 border border-red-200'
-              }`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {message.text}
-            </motion.div>
-          )}
+        {message && (
+          <motion.div
+            className={`mb-6 p-4 rounded-lg ${
+              message.type === 'success' 
+                ? 'bg-green-100 text-green-700 border border-green-200' 
+                : 'bg-red-100 text-red-700 border border-red-200'
+            }`}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {message.text}
+          </motion.div>
+        )}
 
+        {/* Centered Form */}
+        <div className="max-w-2xl mx-auto">
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
             <motion.input
               type="text"
@@ -208,30 +209,6 @@ const Contact = () => {
             </motion.div>
           </form>
         </div>
-
-        {/* Right: Info Card */}
-        <motion.div
-          className="bg-blue-900 text-white p-8 rounded-lg flex flex-col justify-center"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h3 className="text-lg font-semibold mb-3">Say Hello!</h3>
-          <p className="text-sm leading-relaxed mb-6">
-            At Aptitude Counsel, we believe no student should feel lost about
-            their future. Whether you are in Matric, Intermediate, or just
-            starting to think about your career, we are here to guide you.
-          </p>
-          <img
-            src="/contact/contact-image.png"
-            alt="Contact"
-            className="rounded-lg mb-6"
-          />
-          <div>
-            <p className="font-semibold text-sm">24/7 Contact Support</p>
-            <p className="text-sm">info@example.com</p>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

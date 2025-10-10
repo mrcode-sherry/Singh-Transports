@@ -60,6 +60,7 @@ contactSchema.pre('save', function(next) {
 contactSchema.index({ email: 1 });
 contactSchema.index({ createdAt: -1 });
 
-const Contact = model('Contact', contactSchema);
+// Check if the model already exists to prevent OverwriteModelError in Next.js
+const Contact = mongoose.models.Contact || model('Contact', contactSchema);
 
 export default Contact;

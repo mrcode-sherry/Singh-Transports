@@ -5,7 +5,18 @@ import connectToDatabase from '@/lib/mongodb';
 import Reservation from '@/models/Reservation';
 import { validateReservationData } from '@/utils/reservationValidator';
 
-// Your OPTIONS and GET functions are fine, leave them as they are.
+// Authentication middleware
+const authenticate = (request) => {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return false;
+  }
+  
+  const token = authHeader.substring(7);
+  // In a real application, you would verify the JWT token here
+  // For now, we'll use a simple check
+  return token === 'your-secret-token'; // Replace with proper JWT verification
+};
 
 export async function POST(request) {
   console.log("--- New POST Request Received ---");
@@ -67,14 +78,63 @@ export async function POST(request) {
     return NextResponse.json(
       { message: 'An unexpected error occurred on the server.', error: error.message },
       { status: 500 }
+      );
+  }
+}
+
+// GET - Fetch all reservations (protected route)
+export async function GET(request) {
+  try {
+    // Check authentication
+    if (!authenticate(request)) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { 
+          status: 401,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          }
+        }
+      );
+    }
+    
+    // Connect to the database
+    await connectToDatabase();
+    
+    // Fetch all reservations
+    const reservations = await Reservation.find({}).sort({ createdAt: -1 });
+    
+    return NextResponse.json(
+      { reservations }, 
+      { 
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch reservations' },
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        }
+      }
     );
   }
 }
 
-// Your GET and OPTIONS functions remain here...
-export async function GET() {
-  // ... your existing GET code
-}
+// Handle CORS preflight requests
 export async function OPTIONS() {
-  // ... your existing OPTIONS code
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    }
+  });
 }
