@@ -1,4 +1,6 @@
-import { Schema, model } from 'mongoose';
+// src/models/Contact.js
+
+import { Schema, model, models } from 'mongoose'; // <-- CORRECTED: Import 'models' directly
 
 const contactSchema = new Schema({
   firstName: {
@@ -60,7 +62,7 @@ contactSchema.pre('save', function(next) {
 contactSchema.index({ email: 1 });
 contactSchema.index({ createdAt: -1 });
 
-// Check if the model already exists to prevent OverwriteModelError in Next.js
-const Contact = mongoose.models.Contact || model('Contact', contactSchema);
+// CORRECTED: Use 'models' directly, not 'mongoose.models'
+const Contact = models.Contact || model('Contact', contactSchema);
 
 export default Contact;
