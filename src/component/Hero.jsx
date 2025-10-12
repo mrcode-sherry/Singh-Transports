@@ -29,7 +29,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center">
+    <section className="relative min-h-screen bg-white flex items-center">
       <div className="md:px-24 mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10 md:mt-0 mt-24">
         {/* Text Content */}
         <motion.div
