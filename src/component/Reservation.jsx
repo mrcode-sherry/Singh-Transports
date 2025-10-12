@@ -10,24 +10,52 @@ const Reservation = () => {
     phone: "",
     date: "",
     route: "",
-    passengers: 1,
+    passengers: 8,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [validationError, setValidationError] = useState("");
 
   const routes = [
-    "Airport → Hostel A",
-    "Airport → Hostel B",
-    "Hostel A → Airport",
-    "Hostel B → Airport",
-    "Airport → City Center",
-    "City Center → Hostel A",
-    "Hostel B → City Center",
+    { name: "Paris → Puy du Fou", price: 130 },
+    { name: "Paris → Mont Saint Michel", price: 99 },
+    { name: "Paris → Calais Ferry", price: 85 },
+    { name: "Paris → Dunkerque", price: 85 },
+    { name: "Paris → Le Havre", price: 70 },
+    { name: "Paris → Reims", price: 45 },
+    { name: "Paris → Giverny", price: 30 },
   ];
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    if (name === 'passengers') {
+      const passengerCount = parseInt(value);
+      if (passengerCount < 8) {
+        setValidationError("Members should be 8 for this route");
+        return;
+      } else {
+        setValidationError("");
+      }
+    }
+    
+    setForm({ ...form, [name]: value });
+    
+    // Calculate total price when route or passengers change
+    if (name === 'route' || name === 'passengers') {
+      calculateTotalPrice(name === 'route' ? value : form.route, name === 'passengers' ? parseInt(value) : form.passengers);
+    }
+  };
+
+  const calculateTotalPrice = (selectedRoute, passengerCount) => {
+    const route = routes.find(r => r.name === selectedRoute);
+    if (route && passengerCount >= 8) {
+      setTotalPrice(route.price * passengerCount);
+    } else {
+      setTotalPrice(0);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -57,8 +85,10 @@ const Reservation = () => {
           phone: "",
           date: "",
           route: "",
-          passengers: 1,
+          passengers: 8,
         });
+        setTotalPrice(0);
+        setValidationError("");
       } else {
         setSubmitMessage(`Error: ${data.error || 'Failed to submit reservation'}`);
         setIsSuccess(false);
@@ -158,8 +188,8 @@ const Reservation = () => {
             >
               <option value="">Select Route</option>
               {routes.map((r, i) => (
-                <option key={i} value={r}>
-                  {r}
+                <option key={i} value={r.name}>
+                  {r.name} - {r.price}€ per person
                 </option>
               ))}
             </select>
@@ -171,13 +201,38 @@ const Reservation = () => {
             <input
               type="number"
               name="passengers"
+              placeholder="Number of Passengers (Min: 8)"
               value={form.passengers}
               onChange={handleChange}
-              min={1}
+              min={8}
               className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
               required
             />
           </div>
+
+          {/* Validation Error */}
+          {validationError && (
+            <motion.div 
+              className="p-3 rounded-lg bg-red-100 text-red-800 text-sm"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {validationError}
+            </motion.div>
+          )}
+
+          {/* Total Price Display */}
+          {totalPrice > 0 && (
+            <motion.div 
+              className="p-4 rounded-lg bg-blue-100 text-blue-900 font-semibold text-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              Total Price: {totalPrice}€ for {form.passengers} passengers
+            </motion.div>
+          )}
 
           {/* Submit Message */}
           {submitMessage && (
@@ -208,7 +263,7 @@ const Reservation = () => {
             }`}
             whileHover={!isSubmitting ? { scale: 1.05 } : {}}
             whileTap={!isSubmitting ? { scale: 0.95 } : {}}
-            disabled={isSubmitting}
+            disabled={isSubmitting || validationError !== ""}
           >
             {isSubmitting ? (
               <>

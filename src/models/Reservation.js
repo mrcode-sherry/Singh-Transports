@@ -32,13 +32,13 @@ const reservationSchema = new Schema({
     required: [true, 'Route is required'],
     enum: {
       values: [
-        "Airport → Hostel A",
-        "Airport → Hostel B",
-        "Hostel A → Airport",
-        "Hostel B → Airport",
-        "Airport → City Center",
-        "City Center → Hostel A",
-        "Hostel B → City Center"
+        "Paris → Puy du Fou",
+        "Paris → Mont Saint Michel",
+        "Paris → Calais Ferry",
+        "Paris → Dunkerque",
+        "Paris → Le Havre",
+        "Paris → Reims",
+        "Paris → Giverny"
       ],
       message: 'Please select a valid route'
     }
@@ -46,8 +46,18 @@ const reservationSchema = new Schema({
   passengers: {
     type: Number,
     required: [true, 'Number of passengers is required'],
-    min: [1, 'There must be at least 1 passenger'],
+    min: [8, 'There must be at least 8 passengers'],
     max: [50, 'Cannot book for more than 50 passengers']
+  },
+  pricePerPerson: {
+    type: Number,
+    required: [true, 'Price per person is required'],
+    min: [0, 'Price must be a positive number']
+  },
+  totalPrice: {
+    type: Number,
+    required: [true, 'Total price is required'],
+    min: [0, 'Total price must be a positive number']
   }
 }, {
   // BEST PRACTICE: Use Mongoose's built-in timestamps

@@ -29,8 +29,36 @@ export async function POST(request) {
     const body = await request.json();
     console.log("2. Request body parsed:", body);
     
-    // 3. Validate the data with your custom validator
-    const { isValid, errors } = validateReservationData(body);
+    // 3. Calculate price information based on route
+    const routePrices = {
+      "Paris → Puy du Fou": 130,
+      "Paris → Mont Saint Michel": 99,
+      "Paris → Calais Ferry": 85,
+      "Paris → Dunkerque": 85,
+      "Paris → Le Havre": 70,
+      "Paris → Reims": 45,
+      "Paris → Giverny": 30
+    };
+    
+    const pricePerPerson = routePrices[body.route];
+    if (!pricePerPerson) {
+      return NextResponse.json(
+        { message: 'Invalid route selected' },
+        { status: 400 }
+      );
+    }
+    
+    const totalPrice = pricePerPerson * (body.passengers || 8);
+    
+    // Add price information to the body
+    const reservationData = {
+      ...body,
+      pricePerPerson,
+      totalPrice
+    };
+    
+    // 4. Validate the data with your custom validator
+    const { isValid, errors } = validateReservationData(reservationData);
     console.log("3. Custom validation result:", { isValid, errors });
     
     if (!isValid) {
@@ -41,13 +69,13 @@ export async function POST(request) {
       );
     }
     
-    // 4. Create and save the reservation (this is where Mongoose validation runs)
+    // 5. Create and save the reservation (this is where Mongoose validation runs)
     console.log("4. Creating new Reservation document.");
-    const reservation = new Reservation(body);
+    const reservation = new Reservation(reservationData);
     await reservation.save();
     console.log("5. Reservation saved successfully to DB.");
     
-    // 5. Return success response
+    // 6. Return success response
     console.log("-> Success. Returning 201.");
     return NextResponse.json(
       { message: 'Reservation created successfully', reservation },
